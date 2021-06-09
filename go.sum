@@ -4,7 +4,7 @@ github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZN
 github.com/russross/blackfriday/v2 v2.0.1/go.mod h1:+Rmxgy9KzJVeS9/2gXHxylqXiyQDYRxCVz55jmeOWTM=
 github.com/shurcooL/sanitized_anchor_name v1.0.0/go.mod h1:1NzhyTcUVG4SuEtjjoZeVRXNmyL/1OwPU0+IJeTBvfc=
 github.com/urfave/cli/v2 v2.3.0/go.mod h1:LJmUH05zAU44vOAcrfzZQKsZbVcdbOG8rtL3/XcUArI=
-github.com/wenzhenxi/gorsa v0.0.0-20210524035706-528c7050d703 h1:Tiqr9EWpYopXZf668mgTNWguzE6ssRIEviULO3gSWnU=
-github.com/wenzhenxi/gorsa v0.0.0-20210524035706-528c7050d703/go.mod h1:nfhBTKji6rC8lrjyikx8NJ85JHg6ZQam0a9Je+2RVOg=
+github.com/zfs123/gorsa v0.0.0-20210518120244-93fb2f77d0bf h1:mDI+CMlVvqKz1hEx27Z051J5M7047OmwqDco2qqYvz4=
+github.com/zfs123/gorsa v0.0.0-20210518120244-93fb2f77d0bf/go.mod h1:aFyfrdoi43IZTx4GbpNqLPsbla6REnOJcoGeN7qFv98=
 gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405/go.mod h1:Co6ibVJAznAaIkqp8huTwlJQCZ016jof/cbN4VW5Yz0=
 gopkg.in/yaml.v2 v2.2.3/go.mod h1:hI93XBmqTisBFMUTm0b8Fm+jr3Dg1NNxqwp+5A1VGuI=

@@ -23,7 +23,7 @@ func main() {
 			Flags: []cli.Flag{
 				&cli.StringFlag{Name: "private_key", Usage: "private key file"},
 				&cli.StringFlag{Name: "data", Usage: "data file"},
-				&cli.StringFlag{Name: "device_id", Usage: "device id", Required: true},
+				&cli.StringFlag{Name: "device_id", Usage: "device id"},
 			},
 			Action: licgen,
 		},
@@ -56,7 +56,20 @@ func main() {
 }
 
 func licgen(c *cli.Context) error {
-	return nil
+	fp := c.String("private_key")
+	prikey, err := ioutil.ReadFile(fp)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fp = c.String("data")
+	data, err := ioutil.ReadFile(fp)
+	if err != nil {
+		log.Fatal(err)
+	}
+	devid := c.String("device_id")
+	lic, err := lictool.Sign(prikey, data, devid)
+	fmt.Println(lic)
+	return err
 }
 
 func licver(c *cli.Context) error {
@@ -72,12 +85,13 @@ func licver(c *cli.Context) error {
 	}
 
 	devid := c.String("device_id")
-	_, err = lictool.Verify(lic, pk, devid)
+	content, err := lictool.Verify(lic, pk, devid)
+	fmt.Println(string(content))
 	return err
 }
 
 func genid(c *cli.Context) error {
 	macs := c.String("macs")
-	fmt.Println(lictool.GenDevId(macs))
+	fmt.Println(string(lictool.GenDevId(macs)))
 	return nil
 }
