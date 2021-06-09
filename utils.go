@@ -32,12 +32,11 @@ func getMacs(macs string) ([]byte, int) {
 
 func macSha1(macs []byte, nmac int) []byte {
 	sha1output := make([]byte, 20)
-	sha1one := make([]byte, 20)
 	for i := 0; i < nmac; i++ {
 		tmp := macs[i*6 : (i+1)*6]
 		h := sha1.New()
 		h.Write([]byte(tmp))
-		sha1one = h.Sum(nil)
+		sha1one := h.Sum(nil)
 		for j := 0; j < 20; j++ {
 			sha1output[j] = sha1output[j] ^ sha1one[j]
 		}

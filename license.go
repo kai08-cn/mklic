@@ -16,6 +16,7 @@ import (
 	"github.com/zfs123/gorsa"
 )
 
+//Sign sign a license with private key
 func Sign(prikey, data []byte, devid string) (string, error) {
 	if devid == "" {
 		devid = string(GenDevId(""))
@@ -52,6 +53,7 @@ func Sign(prikey, data []byte, devid string) (string, error) {
 	return license, nil
 }
 
+//Verify verify a license
 func Verify(lic, pubkey []byte, devid string) ([]byte, error) {
 	if devid == "" {
 		devid = string(GenDevId(""))
@@ -123,7 +125,7 @@ func computeFingerprint(m map[string]interface{}) (string, error) {
 
 func licAesEncrypt(in []byte, key string) string {
 	block, _ := aes.NewCipher([]byte(key))
-	in = PKCS7Padding(in, block.BlockSize())
+	in = pKCS7Padding(in, block.BlockSize())
 	encrypted := make([]byte, len(in))
 	size := block.BlockSize()
 
@@ -147,21 +149,22 @@ func licAesDecrypt(in []byte, key string) ([]byte, error) {
 		block.Decrypt(decrypted[bs:be], content[bs:be])
 	}
 
-	return PKCS7UnPadding(decrypted), nil
+	return pKCS7UnPadding(decrypted), nil
 }
 
-func PKCS7Padding(ciphertext []byte, blockSize int) []byte {
+func pKCS7Padding(ciphertext []byte, blockSize int) []byte {
 	padding := blockSize - len(ciphertext)%blockSize
 	padtext := bytes.Repeat([]byte{byte(padding)}, padding)
 	return append(ciphertext, padtext...)
 }
 
-func PKCS7UnPadding(s []byte) []byte {
+func pKCS7UnPadding(s []byte) []byte {
 	length := len(s)
 	padding := int(s[length-1])
 	return s[:(length - padding)]
 }
 
+//GenDevId generate a device id with macs (if not define, use macs of local ethernet interfaces)
 func GenDevId(macstr string) []byte {
 	macs, nmac := getMacs(macstr)
 	if nmac == 0 {
