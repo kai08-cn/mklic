@@ -1,4 +1,4 @@
-package lictool
+package mklic
 
 import (
 	"crypto/sha1"

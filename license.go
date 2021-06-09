@@ -1,4 +1,4 @@
-package lictool
+package mklic
 
 import (
 	"bytes"
@@ -10,30 +10,29 @@ import (
 	"log"
 	"sort"
 	"strconv"
+	"time"
 
+	"github.com/google/uuid"
 	"github.com/zfs123/gorsa"
 )
-
-/*
-type License struct {
-	plain     string
-	cleartext string
-	devid     string
-}
-
-func NewLicense() *License {
-	return &License{}
-}
-*/
 
 func Sign(prikey, data []byte, devid string) (string, error) {
 	if devid == "" {
 		devid = string(GenDevId(""))
 	}
+
 	m := make(map[string]interface{})
-	if err := json.Unmarshal(data, &m); err != nil {
-		return "", err
+	if data != nil {
+		if err := json.Unmarshal(data, &m); err != nil {
+			return "", err
+		}
 	}
+	// add default information to license
+	m["time"] = time.Now().Truncate(time.Second).Local().String()
+	m["uuid"] = uuid.New().String()
+	m["devid"] = devid
+	m["version"] = "v1.0"
+
 	fingerprint, err := computeFingerprint(m)
 	if err != nil {
 		return "", err
