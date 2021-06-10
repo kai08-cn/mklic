@@ -1,15 +1,9 @@
 package mklic
 
 import (
-	"bytes"
-	"crypto/aes"
-	"crypto/sha1"
-	"encoding/base64"
 	"encoding/json"
 	"errors"
 	"log"
-	"sort"
-	"strconv"
 	"time"
 
 	"github.com/google/uuid"
@@ -49,16 +43,16 @@ func Sign(prikey, data []byte, devid string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	license := licAesEncrypt(lic, devid)
+	license := aesEncrypt(lic, devid)
 	return license, nil
 }
 
-//Verify verify a license
+//Verify verify a license and return the content
 func Verify(lic, pubkey []byte, devid string) ([]byte, error) {
 	if devid == "" {
 		devid = string(GenDevId(""))
 	}
-	cleartext, err := licAesDecrypt(lic, devid)
+	cleartext, err := aesDecrypt(lic, devid)
 	if err != nil {
 		return nil, err
 	}
@@ -91,77 +85,6 @@ func Verify(lic, pubkey []byte, devid string) ([]byte, error) {
 		return nil, err
 	}
 	return out, nil
-}
-
-func computeFingerprint(m map[string]interface{}) (string, error) {
-	keys := make([]string, 0)
-	for k := range m {
-		keys = append(keys, k)
-	}
-	sort.Strings(keys)
-	var text string
-	for i, v := range keys {
-		var tmp string
-		switch m[v].(type) {
-		case float64:
-			tmp = strconv.Itoa(int(m[v].(float64)))
-		case string:
-			tmp = m[v].(string)
-		case bool:
-			tmp = strconv.FormatBool(m[v].(bool))
-		default:
-			continue
-		}
-		if i != 0 {
-			text += "&"
-		}
-		text = text + v + "=" + tmp
-	}
-	h := sha1.New()
-	h.Write([]byte(text))
-	sha1finger := h.Sum(nil)
-	return base64.StdEncoding.EncodeToString(sha1finger), nil
-}
-
-func licAesEncrypt(in []byte, key string) string {
-	block, _ := aes.NewCipher([]byte(key))
-	in = pKCS7Padding(in, block.BlockSize())
-	encrypted := make([]byte, len(in))
-	size := block.BlockSize()
-
-	for bs, be := 0, size; bs < len(in); bs, be = bs+size, be+size {
-		block.Encrypt(encrypted[bs:be], in[bs:be])
-	}
-	return base64.StdEncoding.EncodeToString(encrypted)
-}
-
-func licAesDecrypt(in []byte, key string) ([]byte, error) {
-	content, err := base64.StdEncoding.DecodeString(string(in))
-	if err != nil {
-		return nil, err
-	}
-
-	block, _ := aes.NewCipher([]byte(key))
-	decrypted := make([]byte, len(content))
-	size := block.BlockSize()
-
-	for bs, be := 0, size; bs < len(content); bs, be = bs+size, be+size {
-		block.Decrypt(decrypted[bs:be], content[bs:be])
-	}
-
-	return pKCS7UnPadding(decrypted), nil
-}
-
-func pKCS7Padding(ciphertext []byte, blockSize int) []byte {
-	padding := blockSize - len(ciphertext)%blockSize
-	padtext := bytes.Repeat([]byte{byte(padding)}, padding)
-	return append(ciphertext, padtext...)
-}
-
-func pKCS7UnPadding(s []byte) []byte {
-	length := len(s)
-	padding := int(s[length-1])
-	return s[:(length - padding)]
 }
 
 //GenDevId generate a device id with macs (if not define, use macs of local ethernet interfaces)
