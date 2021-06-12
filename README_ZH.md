@@ -79,8 +79,7 @@ OPTIONS:
    --devid value   device id(if not defined then local)
    --output value  output file(if not defined then stdout)
    --help, -h      show help (default: false)
-```
-To sign a license, you should have a secret private key. And in order to bind the machine, mklic will use a device id. 
+``` 
 首先你应该有一个保密的私钥和一个设备 id 用于表明该许可将使用的设备。
 
 数据文件是用户申请许可时提交的信息，用于保存信息或做一些行为上的限制。mklic 接收 json 格式的输入数据。
