@@ -6,7 +6,7 @@ A simple licensing tool and library for golang to generate a license with device
 
 The project is an upgrade of [lk](https://github.com/hyperboloide/lk). It provides a convenient way for software publishers to sign license keys with their private key and Information submitted by users of their products. Note that this implementation is quite basic and you can make it more secure with a few modification.
 
-Translations: [English](README.md) | [简体中文](README_zh.md)
+Translations: [English](README.md) | [简体中文](README_ZH.md)
 
 ## How does it works?
 1. Generate a device id with the MAC address
@@ -82,7 +82,7 @@ OPTIONS:
 ```
 To sign a license, you should have a secret private key. And in order to bind the machine, mklic will use a device id. 
 
-Data file is used to save information or make some behavior restrictions. mklik accepts a data file in JSON format. 
+Data file is the information submitted by users when they apply for permission, which is used to save information or make some behavioral restrictions. mklic accepts a data file in JSON format. 
 ```
 // data file
 {
