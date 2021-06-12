@@ -99,6 +99,9 @@ func licver(c *cli.Context) error {
 	}
 	devid := c.String("devid")
 	content, err := license.Verify(lic, pk, devid)
+	if err != nil {
+		log.Fatal("verify license failed, " + err.Error())
+	}
 
 	output := c.String("output")
 	if output != "" {
